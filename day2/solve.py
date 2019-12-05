@@ -1,25 +1,40 @@
 import math
 
 
-def compute(codes, pos=0):
-    opcode = codes[pos]
+def compute(program, pointer=0):
+    opcode = program[pointer]
     if opcode == 1:
-        codes[codes[pos+3]] = codes[codes[pos+1]] + codes[codes[pos+2]]
+        program[program[pointer+3]] = program[program[pointer+1]] + \
+            program[program[pointer+2]]
     elif opcode == 2:
-        codes[codes[pos+3]] = codes[codes[pos+1]] * codes[codes[pos+2]]
+        program[program[pointer+3]] = program[program[pointer+1]] * \
+            program[program[pointer+2]]
     elif opcode == 99:
-        return codes
+        return program
     else:
-        raise Exception('Invalid opcode {} at position {}'.format(opcode, pos))
+        raise Exception(
+            'Invalid opcode {} at position {}'.format(opcode, pointer))
 
-    return compute(codes, pos + 4)
+    return compute(program, pointer + 4)
+
+
+def setInputs(program, inputs):
+    (noun, verb) = inputs
+    newProgram = program.copy()
+    newProgram[1] = noun
+    newProgram[2] = verb
+    return newProgram
 
 
 if __name__ == '__main__':
     with open('./day2/input.txt') as file:
-        codes = [int(code) for code in file.readline().split(',')]
-    codes[1] = 12
-    codes[2] = 2
-    computed = compute(codes)
+        program = [int(i) for i in file.readline().split(',')]
+    inputs = (1, 12)
+    computed = compute(setInputs(program, inputs))
     print(computed[0])
-    #incomplete, missing step 2
+
+    desiredOutput = 19690720
+    inputs = [(noun, verb) for noun in range(100) for verb in range(100)]
+    noun, verb = next(i for i in inputs if compute(
+        setInputs(program, i))[0] == desiredOutput)
+    print(100*noun+verb)
