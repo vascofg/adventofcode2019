@@ -34,7 +34,7 @@ if __name__ == '__main__':
     print(computed[0])
 
     desiredOutput = 19690720
-    inputs = [(noun, verb) for noun in range(100) for verb in range(100)]
-    noun, verb = next(i for i in inputs if compute(
+    inputsGenerator = ((noun, verb) for noun in range(100) for verb in range(100))
+    noun, verb = next(i for i in inputsGenerator if compute(
         setInputs(program, i))[0] == desiredOutput)
     print(100*noun+verb)
