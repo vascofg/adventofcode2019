@@ -6,22 +6,21 @@ def makeGraph(orbits):
         graph[A].append(B)
     return graph
 
-def dfs(node, graph, acc, stack=[]):
-    for prevNode in stack:
-        acc.add((prevNode, node))
-
+def dfs(node, graph, stack=[]):
+    sum = 0
     if(node in graph):
         children = graph[node]
         newStack = stack.copy()
         newStack.append(node)
 
         for child in children:
-            dfs(child, graph, acc, newStack)
+            # for each branch, go until the end and sum the number of previous edges
+            sum = sum + dfs(child, graph, newStack)
+
+    return sum + len(stack)
 
 def ocb(orbits):
-    acc = set()
-    dfs("COM", makeGraph(orbits), acc)
-    return len(acc)
+    return dfs("COM", makeGraph(orbits))
         
 
 
